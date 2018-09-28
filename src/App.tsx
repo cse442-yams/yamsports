@@ -4,6 +4,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import * as React from 'react';
 import { CssBaseline } from "@material-ui/core";
 import LandingPage from "./LandingPage";
+import { BrowserRouter, Route } from "react-router-dom";
 
 const theme = createMuiTheme({
   palette: {
@@ -15,6 +16,8 @@ const theme = createMuiTheme({
 export const App = () => (
   <MuiThemeProvider theme={theme}>
     <CssBaseline/>
-    <LandingPage/>
+    <BrowserRouter>
+      <Route exact={true} path={"/"} component={LandingPage}/>
+    </BrowserRouter>
   </MuiThemeProvider>
 )
