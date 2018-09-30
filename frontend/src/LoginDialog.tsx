@@ -2,7 +2,11 @@ import * as React from 'react';
 import { WithStyles, Theme, createStyles, withStyles, Dialog, DialogTitle, Divider, DialogContent, TextField, Tabs, Tab, DialogActions, Button } from '@material-ui/core';
 
 
-const styles = (theme: Theme) => createStyles({})
+const styles = (theme: Theme) => createStyles({
+    dialogDivider: {
+        marginBottom: theme.spacing.unit * 2
+    }
+})
 
 interface IProps extends WithStyles<typeof styles> {
     isOpen: boolean,
@@ -31,10 +35,11 @@ class LoginDialog extends React.Component<IProps, State> {
                 <DialogActions>
                     <Button disabled={true}>Log In</Button>
                 </DialogActions>
-                {/* <Divider/>
+                <Divider className={this.props.classes.dialogDivider}/>
                 <DialogContent>
-                    <Button variant="raised" disabled={true}>Connect with Facebook</Button>
-                </DialogContent> */}
+                    <Button fullWidth>Continue without an account</Button>
+                    {/* <Button variant="raised" disabled={true}>Connect with Facebook</Button> */}
+                </DialogContent>
             </Dialog>
         )
     }
