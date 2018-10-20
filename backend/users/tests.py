@@ -36,3 +36,35 @@ class UserAuthTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn("key", response.data)
 
+
+class UserRegistrationTest(APITestCase):
+    client = APIClient()
+
+    def test_valid_signup(self):
+        url = reverse("rest_register")
+
+        response = self.client.post(
+            url,
+            data=json.dumps({"username": "newuser", "email": "test@gmail.com", "password1": "verylongpassword", "password2": "verylongpassword"}),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(CustomUser.objects.count(), 1)
+        user = CustomUser.objects.get(id=1)
+        self.assertEqual(user.username, "newuser")
+
+    def test_invalid_signup(self):
+        url = reverse("rest_register")
+
+        response = self.client.post(
+            url,
+            data=json.dumps({"username": "newuser", "email": "test@gmail.com", "password1": "verylongpassword", "password2": "mismatch"}),
+            content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(CustomUser.objects.count(), 0)
+
+
