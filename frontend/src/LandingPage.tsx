@@ -4,6 +4,9 @@ import purple from "@material-ui/core/colors/purple";
 import { createStyles, WithStyles, withStyles, Typography, Theme, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
 import jamesImage from "./james.jpg";
 import LoginDialog from './auth/LoginDialog';
+import {observer} from "mobx-react";
+import {userStore} from "./auth/UserStore";
+import {Redirect} from "react-router";
 
 const landingTheme = createMuiTheme({
     palette: {
@@ -49,10 +52,16 @@ const initialState = {
 }
 type State = Readonly<typeof initialState>
 
+@observer
 class LandingPage extends React.Component<WithStyles<typeof styles>, State> {
     public readonly state: State = initialState;
 
     public render() {
+        if(userStore.isAuthenticated) {
+            return (
+                <Redirect to={"/profile"}/>
+            )
+        }
         return (
             <MuiThemeProvider theme={landingTheme}>
                 <LoginDialog isOpen={this.state.loginOpen} handleClose={this.closeLogin}/>

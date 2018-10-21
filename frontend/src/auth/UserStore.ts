@@ -1,15 +1,30 @@
-import {action, observable} from "mobx";
+import {action, observable, runInAction} from "mobx";
 import {userService} from "./UserService";
+import {authStore} from "./AuthStore";
 
 
 class UserStore {
-    @observable public username: string
+    @observable public username: string;
+    @observable public isAuthenticated = false;
 
     @action public fetchUser() {
         userService.getUserDetails()
             .then(resp => {
-                action(() => this.username = resp.data.username)
+                runInAction(() => {
+                    this.username = resp.data.username;
+                    this.isAuthenticated = true;
+                })
             })
+            .catch(err => {
+                if(err.response) {
+                    authStore.logout();
+                }
+            })
+    }
+
+    @action public forgetUser() {
+        this.username = "";
+        this.isAuthenticated = false;
     }
 }
 

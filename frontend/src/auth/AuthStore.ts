@@ -1,4 +1,4 @@
-import {observable, action, reaction, computed} from "mobx";
+import {observable, action, reaction, computed, autorun} from "mobx";
 import {authService} from "./AuthService";
 import {userStore} from "./UserStore";
 
@@ -26,10 +26,12 @@ class AuthStore {
                 }
             }
         )
-    }
 
-    @computed get isAuthenticated() {
-        return this.token !== null;
+        autorun(() => {
+            if (this.token) {
+                userStore.fetchUser();
+            }
+        })
     }
 
     @action public setUsername(username: string) {
@@ -54,11 +56,15 @@ class AuthStore {
         authService.login(this.formValues.username, this.formValues.password)
             .then(resp => {
                 this.setToken(resp.data.key);
-                userStore.fetchUser();
             })
     }
 
-    @action public setToken(token: string) {
+    @action public logout() {
+        this.setToken(null);
+        userStore.forgetUser();
+    }
+
+    @action public setToken(token: string | null) {
         this.token = token
     }
 }
