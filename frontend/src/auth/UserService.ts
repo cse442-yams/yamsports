@@ -3,7 +3,7 @@ import {authStore} from "./AuthStore";
 
 class UserService {
     private readonly api = axios.create({
-        baseURL: 'localhost:8000/api/v1/',
+        baseURL: 'http://localhost:8000/api/v1/',
         headers: {
             "Content-Type": "application/json"
         }
@@ -20,7 +20,7 @@ class UserService {
     }
 
     public getUserDetails() {
-        return this.api.get("/rest-auth/user")
+        return this.api.get("/rest-auth/user/")
     }
 }
 

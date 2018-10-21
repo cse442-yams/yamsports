@@ -1,5 +1,6 @@
 import {observable, action, reaction, computed} from "mobx";
 import {authService} from "./AuthService";
+import {userStore} from "./UserStore";
 
 class AuthStore {
 
@@ -51,7 +52,10 @@ class AuthStore {
 
     @action public login() {
         authService.login(this.formValues.username, this.formValues.password)
-            .then(resp => this.setToken(resp.data.key))
+            .then(resp => {
+                this.setToken(resp.data.key);
+                userStore.fetchUser();
+            })
     }
 
     @action public setToken(token: string) {
