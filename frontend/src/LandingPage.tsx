@@ -3,7 +3,7 @@ import green from "@material-ui/core/colors/green";
 import purple from "@material-ui/core/colors/purple";
 import { createStyles, WithStyles, withStyles, Typography, Theme, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
 import jamesImage from "./james.jpg";
-import LoginDialog from './LoginDialog';
+import LoginDialog from './auth/LoginDialog';
 
 const landingTheme = createMuiTheme({
     palette: {

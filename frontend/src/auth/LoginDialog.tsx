@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { WithStyles, Theme, createStyles, withStyles, Dialog, DialogTitle, Divider, DialogContent, TextField, Tabs, Tab, DialogActions, Button } from '@material-ui/core';
+import LoginForm from "./LoginForm";
 
 
 const styles = (theme: Theme) => createStyles({
@@ -27,19 +28,7 @@ class LoginDialog extends React.Component<IProps, State> {
                     <Tab label={"Login"}/>
                     <Tab label={"Register"} disabled={true}/>
                 </Tabs>
-                <DialogTitle>Login</DialogTitle>
-                <DialogContent>
-                    <TextField autoFocus={true} label="Email Address" type="email" fullWidth={true} margin="normal"/>
-                    <TextField label="Password" type="password" fullWidth={true} margin="normal"/>
-                </DialogContent>
-                <DialogActions>
-                    <Button disabled={true}>Log In</Button>
-                </DialogActions>
-                <Divider className={this.props.classes.dialogDivider}/>
-                <DialogContent>
-                    <Button fullWidth>Continue without an account</Button>
-                    {/* <Button variant="raised" disabled={true}>Connect with Facebook</Button> */}
-                </DialogContent>
+                {this.state.tab === 0 && <LoginForm/>}
             </Dialog>
         )
     }
