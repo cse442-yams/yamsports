@@ -1,12 +1,28 @@
 import * as React from "react";
-import { Theme, createStyles, WithStyles, withStyles, AppBar, Toolbar, Typography } from "@material-ui/core";
+import {Theme, createStyles, WithStyles, withStyles, AppBar, Toolbar, Typography, Button} from "@material-ui/core";
+import {userStore} from "./auth/UserStore";
+import {observer} from "mobx-react";
+import {authStore} from "./auth/AuthStore";
 
-const styles = (theme: Theme) => createStyles({});
+const styles = (theme: Theme) => createStyles({
+    grow: {
+        flexGrow: 1
+    },
 
-export const Navbar = withStyles(styles)((props: WithStyles<typeof styles>) => (
+    logoutButton: {
+        marginLeft: theme.spacing.unit * 2
+    }
+});
+
+const handleLogout = () => authStore.logout();
+
+export const Navbar = withStyles(styles)(observer((props: WithStyles<typeof styles>) => (
     <AppBar>
         <Toolbar>
-            <Typography variant="title" color="inherit">YAMSports</Typography>
+            <Typography variant="title" color="inherit" className={props.classes.grow}>YAMSports</Typography>
+
+            <Typography variant="body1" color={"inherit"}>Welcome, {`${userStore.username}`}</Typography>
+            <Button color={"inherit"} className={props.classes.logoutButton} onClick={handleLogout}>Logout</Button>
         </Toolbar>
     </AppBar>
-));
+)));
