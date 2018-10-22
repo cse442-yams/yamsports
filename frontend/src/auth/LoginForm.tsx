@@ -6,11 +6,12 @@ import {
     DialogTitle,
     Divider,
     TextField,
-    Theme, withStyles,
+    Theme, Typography, withStyles,
     WithStyles
 } from "@material-ui/core";
 import {authStore} from "./AuthStore";
 import {ChangeEvent} from "react";
+import {observer} from "mobx-react";
 
 
 const styles = (theme: Theme) => createStyles({
@@ -19,6 +20,7 @@ const styles = (theme: Theme) => createStyles({
     }
 });
 
+@observer
 class LoginForm extends React.Component<WithStyles<typeof styles>, any> {
 
     private handleUsernameChange = (e: ChangeEvent<HTMLTextAreaElement>) => authStore.setUsername(e.target.value);
@@ -34,16 +36,19 @@ class LoginForm extends React.Component<WithStyles<typeof styles>, any> {
             <React.Fragment>
                 <DialogTitle>Login</DialogTitle>
                 <DialogContent>
-                    <TextField autoFocus={true} label="Username" fullWidth={true} margin="normal" onChange={this.handleUsernameChange}/>
-                    <TextField label="Password" type="password" fullWidth={true} margin="normal" onChange={this.handlePasswordChange}/>
+                    {authStore.nonfieldError !== '' && <Typography color={"error"}>{authStore.nonfieldError}</Typography>}
+                    <TextField autoFocus={true} label="Username" fullWidth={true} margin="normal"
+                               onChange={this.handleUsernameChange} error={authStore.errorValues.username !== ''} helperText={authStore.errorValues.username}/>
+                    <TextField label="Password" type="password" fullWidth={true} margin="normal"
+                               onChange={this.handlePasswordChange} error={authStore.errorValues.password !== ''} helperText={authStore.errorValues.password}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleSubmit}>Log In</Button>
                 </DialogActions>
                 {/*<Divider className={this.props.classes.dialogDivider}/>*/}
                 {/*<DialogContent>*/}
-                    {/*/!*<Button fullWidth>Continue without an account</Button>*!/*/}
-                    {/*/!* <Button variant="raised" disabled={true}>Connect with Facebook</Button> *!/*/}
+                {/*/!*<Button fullWidth>Continue without an account</Button>*!/*/}
+                {/*/!* <Button variant="raised" disabled={true}>Connect with Facebook</Button> *!/*/}
                 {/*</DialogContent>*/}
             </React.Fragment>
         )

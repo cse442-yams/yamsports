@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
-    Theme,
+    Theme, Typography,
     WithStyles,
     withStyles
 } from "@material-ui/core";
@@ -27,6 +27,7 @@ export const RegistrationForm = withStyles(styles)(observer((props: WithStyles<t
     <React.Fragment>
         <DialogTitle>Create Account</DialogTitle>
         <DialogContent>
+            {authStore.nonfieldError !== '' && <Typography color={"error"}>{authStore.nonfieldError}</Typography>}
             <TextField autoFocus={true} label="Username" fullWidth={true} margin="normal"
                        onChange={handleUsernameChange} error={authStore.errorValues.username !== ''} helperText={authStore.errorValues.username}/>
             <TextField label="Password" type="password" fullWidth={true} margin="normal"

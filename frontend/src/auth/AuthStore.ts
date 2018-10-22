@@ -20,6 +20,8 @@ class AuthStore {
         password2: ''
     };
 
+    @observable nonfieldError = '';
+
     @observable public token = window.localStorage.getItem("token");
 
     constructor() {
@@ -63,14 +65,30 @@ class AuthStore {
         this.formValues.email = '';
         this.formValues.password = '';
 
+        this.clearErrors()
+    }
+
+    @action public clearErrors() {
         // reset all error values to empty string
         Object.keys(this.errorValues).forEach(k => this.errorValues[k] = '');
+        this.nonfieldError = '';
     }
 
     @action public login() {
         authService.login(this.formValues.username, this.formValues.password)
             .then(resp => {
                 this.setToken(resp.data.key);
+            })
+            .catch(err => {
+                if(err.response && err.response.status === 400) {
+                    runInAction(() => {
+                        this.clearErrors();
+                        const data = err.response.data;
+                        // set all errorValues to the corresponding key in the error response
+                        Object.keys(data).forEach(k => this.errorValues[k] = data[k][0]);
+                        this.nonfieldError = data['non_field_errors'] ? data['non_field_errors'][0] : ''
+                    })
+                }
             })
     }
 
@@ -82,9 +100,11 @@ class AuthStore {
             .catch(err => {
                 if(err.response && err.response.status === 400) {
                     runInAction(() => {
+                        this.clearErrors();
                         const data = err.response.data;
                         // set all errorValues to the corresponding key in the error response
                         Object.keys(data).forEach(k => this.errorValues[k] = data[k][0]);
+                        this.nonfieldError = data['non_field_errors'] ? data['non_field_errors'][0] : ''
                     })
                 }
             })
