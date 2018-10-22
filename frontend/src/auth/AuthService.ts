@@ -14,6 +14,14 @@ class AuthService {
             "password": password
         })
     }
+
+    public register(username: string, pass1: string, pass2: string) {
+        return this.api.post("/rest-auth/registration", {
+            "username": username,
+            "password1": pass1,
+            "password2": pass2
+        })
+    }
 }
 
 export const authService = new AuthService();

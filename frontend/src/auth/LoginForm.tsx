@@ -40,11 +40,11 @@ class LoginForm extends React.Component<WithStyles<typeof styles>, any> {
                 <DialogActions>
                     <Button onClick={this.handleSubmit}>Log In</Button>
                 </DialogActions>
-                <Divider className={this.props.classes.dialogDivider}/>
-                <DialogContent>
-                    <Button fullWidth>Continue without an account</Button>
-                    {/* <Button variant="raised" disabled={true}>Connect with Facebook</Button> */}
-                </DialogContent>
+                {/*<Divider className={this.props.classes.dialogDivider}/>*/}
+                {/*<DialogContent>*/}
+                    {/*/!*<Button fullWidth>Continue without an account</Button>*!/*/}
+                    {/*/!* <Button variant="raised" disabled={true}>Connect with Facebook</Button> *!/*/}
+                {/*</DialogContent>*/}
             </React.Fragment>
         )
     }
