@@ -11,13 +11,17 @@ const styles = (theme: Theme) => createStyles({
 
     logoutButton: {
         marginLeft: theme.spacing.unit * 2
+    },
+
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
     }
 });
 
 const handleLogout = () => authStore.logout();
 
 export const Navbar = withStyles(styles)(observer((props: WithStyles<typeof styles>) => (
-    <AppBar>
+    <AppBar className={props.classes.appBar}>
         <Toolbar>
             <Typography variant="title" color="inherit" className={props.classes.grow}>YAMSports</Typography>
 

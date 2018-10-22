@@ -5,6 +5,7 @@ import players from "./data/players_nba_2018.json";
 import {userStore} from "./auth/UserStore";
 import {Redirect} from "react-router";
 import {observer} from "mobx-react";
+import Sidebar from "./Sidebar";
 
 const styles = (theme: Theme) => createStyles({});
 console.log(players);
@@ -19,7 +20,11 @@ class ProfilePage extends React.Component<WithStyles<typeof styles>, any> {
             )
         }
         return(
-            <Navbar/>
+            <div>
+
+                <Navbar/>
+                <Sidebar/>
+            </div>
         )
     }
 }
