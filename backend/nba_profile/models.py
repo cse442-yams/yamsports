@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import CustomUser
+
 
 class NBATeam(models.Model):
     nba_id = models.PositiveIntegerField(unique=True, db_index=True)
@@ -27,5 +29,10 @@ class NBAPlayer(models.Model):
     college_name = models.CharField(max_length=128, null=True)
     last_affiliation = models.CharField(max_length=128, null=True)
     country = models.CharField(max_length=256, null=True)
+
+
+class UserTeam(models.Model):
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    players = models.ManyToManyField(NBAPlayer)
 
 
