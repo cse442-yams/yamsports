@@ -32,7 +32,7 @@ class NBAPlayer(models.Model):
 
 
 class UserTeam(models.Model):
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     players = models.ManyToManyField(NBAPlayer)
 
 

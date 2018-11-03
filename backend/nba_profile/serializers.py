@@ -36,7 +36,7 @@ class UserTeamSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data['user']
-        team = UserTeam(user_id=user)
+        team = UserTeam(user=user)
         team.save()
         team.players.set(validated_data['players'])
         team.save()

@@ -29,7 +29,7 @@ class UserTeamsList(views.APIView):
 
     def get(self, request):
         user = request.user
-        user_teams = UserTeam.objects.all().filter(user_id=user)
+        user_teams = UserTeam.objects.all().filter(user=user)
         serializer = UserTeamSerializer(user_teams, many=True)
         return Response(serializer.data)
 
