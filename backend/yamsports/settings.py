@@ -50,7 +50,8 @@ INSTALLED_APPS = [
 
     'api',
     'users',
-    'nba_profile'
+    'nba_profile',
+    'newsfeed'
 ]
 
 MIDDLEWARE = [
