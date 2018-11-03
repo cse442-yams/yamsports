@@ -10,7 +10,7 @@ from nba_profile.serializers import NBAPlayerBasicSerializer, NBAPlayerDetailSer
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj.user_id == request.user
+        return obj.user == request.user
 
 
 class NBAPlayersList(generics.ListAPIView):
