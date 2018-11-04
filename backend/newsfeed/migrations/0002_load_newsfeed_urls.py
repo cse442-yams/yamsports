@@ -17,6 +17,13 @@ def load_urls(apps, schema_editor):
     for url in URLS:
         NewsFeedURL.objects.create(url=url)
 
+    NBATeam = apps.get_model('nba_profile', 'NBATeam')
+    for team in NBATeam.objects.all().exclude(code='mavericks'):
+        # for some reason the Mavericks feed doesn't follow the same format as the others
+        NewsFeedURL.objects.create(url=f'https://www.nba.com/{team.code}/rss.xml')
+
+    NewsFeedURL.objects.create(url='https://www.mavs.com/feed/')
+
 
 def clear_urls(apps, schema_editor):
     NewsFeedURL = apps.get_model('newsfeed', 'NewsFeedURL')
@@ -27,6 +34,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('newsfeed', '0001_initial'),
+        ('nba_profile', '0002_base_player_data')
     ]
 
     operations = [

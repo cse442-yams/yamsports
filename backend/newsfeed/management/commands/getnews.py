@@ -35,8 +35,8 @@ class Command(BaseCommand):
                     NewsItem.objects.update_or_create(
                         link=item.link,
                         defaults={
-                            'title': item.title,
-                            'summary': item.summary,
+                            'title': item.get('title', 'No Title'),
+                            'summary': item.get('summary', 'No Summary'),
                             'pub_date': datetime.fromtimestamp(time.mktime(item_date), tz=utc)
                         }
                     )
@@ -45,8 +45,8 @@ class Command(BaseCommand):
                     # Store the feed information if it doesn't exist
                     updated = f.feed.get('updated_parsed')
                     feed_info = NewsFeed.objects.create(
-                        title=f.feed.title,
-                        description=f.feed.description,
+                        title=f.feed.get('title', 'No Title'),
+                        description=f.feed.get('description', 'No Description'),
                         link=f.feed.link,
                         updated=datetime.fromtimestamp(time.mktime(updated), tz=utc) if updated else None
                     )
