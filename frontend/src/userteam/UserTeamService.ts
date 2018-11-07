@@ -4,7 +4,7 @@ class UserTeamService {
     private readonly api = authorized_api;
 
     public fetchUserTeams() {
-        return this.api.get("/nba/teams");
+        return this.api.get("/nba/teams/");
     }
 }
 
