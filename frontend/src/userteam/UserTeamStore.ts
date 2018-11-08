@@ -25,6 +25,7 @@ export interface UserTeam {
 }
 
 class UserTeamStore {
+    @observable editMode = false;
     @observable inProgress = false;
     @observable allUserTeams: UserTeam[] = [];
 
