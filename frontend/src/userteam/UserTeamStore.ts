@@ -25,9 +25,9 @@ export interface UserTeam {
 }
 
 class UserTeamStore {
-    @observable editMode = false;
     @observable inProgress = false;
     @observable allUserTeams: UserTeam[] = [];
+    @observable.shallow allPlayers: NBAPlayer[] = [];
 
     @computed get hasTeam() {
         return this.allUserTeams.length > 0;
@@ -45,5 +45,12 @@ class UserTeamStore {
     }
 }
 
+class UserTeamUIStore {
+    @observable editMode = false;
+    @observable addPlayerDialogOpen = false;
+
+}
+
 export const userTeamStore = new UserTeamStore();
+export const userTeamUIStore = new UserTeamUIStore();
 

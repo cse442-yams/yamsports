@@ -11,10 +11,10 @@ import {
     WithStyles, Zoom
 } from "@material-ui/core";
 import {observer} from "mobx-react";
-import {userTeamStore} from "./UserTeamStore";
+import {userTeamStore, userTeamUIStore} from "./UserTeamStore";
 import {NBAPlayerCard} from "./NBAPlayerCard";
-import {observable} from "mobx";
 import AddIcon from "@material-ui/icons/Add";
+import {AddPlayerDialog} from "./AddPlayerDialog";
 
 const styles = (theme: Theme) => createStyles({
     content: {
@@ -41,21 +41,24 @@ class TeamList extends React.Component<WithStyles<typeof styles>, any> {
         userTeamStore.fetchUserTeams();
     }
 
-    private toggleEditMode = (e: any, checked: boolean) => { userTeamStore.editMode = checked};
+    private toggleEditMode = (e: any, checked: boolean) => { userTeamUIStore.editMode = checked};
 
     public render(): React.ReactNode {
         return (
             <main className={this.props.classes.content}>
-                    <div className={this.props.classes.spacer}/>
+                <div className={this.props.classes.spacer}/>
                 <div className={this.props.classes.heading}>
                     <Typography className={this.props.classes.title} variant={"display3"} gutterBottom={true}>Your team</Typography>
-                    <FormControlLabel control={<Switch checked={userTeamStore.editMode}/>} label={"Edit"} onChange={this.toggleEditMode}/>
+                    <FormControlLabel control={<Switch checked={userTeamUIStore.editMode}/>} label={"Edit"} onChange={this.toggleEditMode}/>
                 </div>
+                <AddPlayerDialog/>
                 {getContent()}
             </main>
         )
     }
 }
+
+const toggleDialog = () => { userTeamUIStore.addPlayerDialogOpen = true };
 
 const getContent = () => {
     if (userTeamStore.inProgress) {
@@ -71,8 +74,8 @@ const getContent = () => {
                     </Grid>
                 )))}
                 <Grid item>
-                    <Zoom in={userTeamStore.editMode}>
-                        <Button variant={"fab"} color={"secondary"}><AddIcon/></Button>
+                    <Zoom in={userTeamUIStore.editMode}>
+                        <Button variant={"fab"} color={"secondary"} onClick={toggleDialog}><AddIcon/></Button>
                     </Zoom>
                 </Grid>
             </Grid>
