@@ -6,6 +6,17 @@ class UserTeamService {
     public fetchUserTeams() {
         return this.api.get("/nba/teams/");
     }
+
+    public fetchAllPlayers() {
+        return this.api.get("/nba/players/");
+    }
+
+    public updateUserTeam(teamId: number, playerIds: number[]) {
+        return this.api.patch(`/nba/teams/${teamId}/`, {
+            player_ids: playerIds
+        });
+
+    }
 }
 
 export const userTeamService = new UserTeamService();

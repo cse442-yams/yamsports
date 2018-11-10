@@ -39,6 +39,7 @@ class TeamList extends React.Component<WithStyles<typeof styles>, any> {
 
     public componentDidMount(): void {
         userTeamStore.fetchUserTeams();
+        userTeamStore.fetchAllPlayers();
     }
 
     private toggleEditMode = (e: any, checked: boolean) => { userTeamUIStore.editMode = checked};

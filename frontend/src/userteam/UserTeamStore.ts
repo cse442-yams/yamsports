@@ -29,12 +29,14 @@ class UserTeamStore {
     @observable allUserTeams: UserTeam[] = [];
     @observable.shallow allPlayers: NBAPlayer[] = [];
 
+    @observable.shallow playersToAdd: NBAPlayer[] = [];
+
     @computed get hasTeam() {
         return this.allUserTeams.length > 0;
     }
 
     @action public fetchUserTeams() {
-        this.inProgress = true
+        this.inProgress = true;
         userTeamService.fetchUserTeams()
             .then(resp => {
                 runInAction(() => {
@@ -42,6 +44,31 @@ class UserTeamStore {
                     this.inProgress = false;
                 });
             })
+    }
+
+    @action public fetchAllPlayers() {
+        userTeamService.fetchAllPlayers()
+            .then(resp => {
+                runInAction(() => {
+                    this.allPlayers = resp.data;
+                })
+            })
+    }
+
+    @action public submitAddPlayers() {
+        const newTeam = new Set(this.allUserTeams[0].players.concat(this.playersToAdd).map(player => player.id));
+        this.inProgress = true;
+        this.playersToAdd = [];
+        userTeamUIStore.addPlayerDialogOpen = false;
+        userTeamUIStore.editMode = false;
+        userTeamService.updateUserTeam(this.allUserTeams[0].id, Array.from(newTeam))
+            .then(resp => {
+                runInAction(() => {
+                    this.allUserTeams[0] = resp.data;
+                    this.inProgress = false;
+                })
+            })
+
     }
 }
 
