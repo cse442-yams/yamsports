@@ -68,7 +68,22 @@ class UserTeamStore {
                     this.inProgress = false;
                 })
             })
+    }
 
+    @action public removePlayer(playerId: number) {
+        const oldTeam = this.allUserTeams[0].players.slice();
+        const newTeam = this.allUserTeams[0].players.filter(p => p.id !== playerId);
+        this.allUserTeams[0].players = newTeam;
+        userTeamService.updateUserTeam(this.allUserTeams[0].id, newTeam.map(p => p.id))
+            .then(resp => {
+                runInAction(() => { this.allUserTeams[0] = resp.data })
+            })
+            .catch(reason => {
+                runInAction(() => {
+                    this.allUserTeams[0].players = oldTeam;
+                    // TODO: error message
+                })
+            })
     }
 }
 
