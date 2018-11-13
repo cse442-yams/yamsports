@@ -4,7 +4,7 @@ import {authStore} from "./AuthStore";
 
 
 class UserStore {
-    @observable public username: string;
+    @observable public username: string = "";
     @observable public isAuthenticated = false;
 
     @action public fetchUser() {
