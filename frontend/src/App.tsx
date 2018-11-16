@@ -21,10 +21,7 @@ export const App = observer(() => (
     <MuiThemeProvider theme={theme}>
         <CssBaseline/>
         <BrowserRouter>
-            <Switch>
-                <Route exact={true} path={"/"} component={LandingPage}/>
-                <Route path={"/profile"} component={ProfilePage}/>
-            </Switch>
+            {authStore.token ? <ProfilePage/> : <LandingPage/>}
         </BrowserRouter>
         <DevTools/>
     </MuiThemeProvider>
