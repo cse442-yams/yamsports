@@ -44,7 +44,7 @@ class UserTeamsTest(APITestCase):
 
     def test_create_team(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.post(reverse('user-teams-list'), data={'player_ids': [1, 2, 3]})
+        response = self.client.post(reverse('user-teams-list'), data={'player_ids': [1, 2, 3], "name": "new team"})
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -53,10 +53,24 @@ class UserTeamsTest(APITestCase):
         team.players.set(NBAPlayer.objects.all()[:5])
 
         self.client.force_authenticate(user=self.user)
-        response = self.client.patch(reverse('user-teams-update', args=[1]), data={'player_ids': [10]})
+        response = self.client.patch(reverse('user-teams-update', args=[1]), data={'player_ids': [10], "name": team.name})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         team.refresh_from_db()
         self.assertEqual(team.players.count(), 1)
         self.assertEqual(team.players.get().id, 10)
+
+    def test_update_name(self):
+        team = UserTeam.objects.create(user=self.user)
+        team.players.set(NBAPlayer.objects.all()[:5])
+
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(reverse('user-teams-update', args=[1]), data={'name': 'newname', 'player_ids': [1, 2, 3, 4, 5]})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        team.refresh_from_db()
+        self.assertEqual(team.name, 'newname')
+        self.assertEqual(team.players.count(), 5)
+
+
 
