@@ -21,6 +21,7 @@ export interface NBATeam {
 
 export interface UserTeam {
     readonly id: number;
+    name: string;
     players: NBAPlayer[];
 }
 
@@ -30,6 +31,7 @@ class UserTeamStore {
     @observable.shallow allPlayers: NBAPlayer[] = [];
 
     @observable.shallow playersToAdd: NBAPlayer[] = [];
+    @observable newTeamName: string = "";
 
     @computed get hasTeam() {
         return this.allUserTeams.length > 0;
@@ -61,7 +63,7 @@ class UserTeamStore {
         this.playersToAdd = [];
         userTeamUIStore.addPlayerDialogOpen = false;
         userTeamUIStore.editMode = false;
-        userTeamService.updateUserTeam(this.allUserTeams[0].id, Array.from(newTeam))
+        userTeamService.updateUserTeam(this.allUserTeams[0].id, Array.from(newTeam), this.allUserTeams[0].name)
             .then(resp => {
                 runInAction(() => {
                     this.allUserTeams[0] = resp.data;
@@ -74,7 +76,7 @@ class UserTeamStore {
         const oldTeam = this.allUserTeams[0].players.slice();
         const newTeam = this.allUserTeams[0].players.filter(p => p.id !== playerId);
         this.allUserTeams[0].players = newTeam;
-        userTeamService.updateUserTeam(this.allUserTeams[0].id, newTeam.map(p => p.id))
+        userTeamService.updateUserTeam(this.allUserTeams[0].id, newTeam.map(p => p.id), this.allUserTeams[0].name)
             .then(resp => {
                 runInAction(() => { this.allUserTeams[0] = resp.data })
             })

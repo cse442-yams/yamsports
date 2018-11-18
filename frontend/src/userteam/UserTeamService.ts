@@ -11,9 +11,10 @@ class UserTeamService {
         return this.api.get("/nba/players/");
     }
 
-    public updateUserTeam(teamId: number, playerIds: number[]) {
+    public updateUserTeam(teamId: number, playerIds: number[], name: string) {
         return this.api.patch(`/nba/teams/${teamId}/`, {
-            player_ids: playerIds
+            player_ids: playerIds,
+            name: name
         });
 
     }
