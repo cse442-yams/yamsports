@@ -11,13 +11,14 @@ import {
     WithStyles
 } from "@material-ui/core";
 import Dashboard from '@material-ui/icons/Dashboard'
-import {userTeamStore} from "./userteam/UserTeamStore";
+import {userTeamStore, userTeamUIStore} from "./userteam/UserTeamStore";
 import ListSubheader from "@material-ui/core/ListSubheader/ListSubheader";
 import {ListItemLink} from "./ListItemLink";
 import Home from "@material-ui/icons/Home";
 import Divider from "@material-ui/core/Divider/Divider";
 import Button from "@material-ui/core/Button/Button";
 import {observer} from "mobx-react";
+import {CreateTeamDialog} from "./userteam/CreateTeamDialog";
 
 const sidebarWidth = 240;
 
@@ -36,6 +37,8 @@ const styles = (theme: Theme) => createStyles({
     }
 });
 
+const openDialog = () => userTeamUIStore.createTeamDialogOpen = true;
+
 @observer
 class Sidebar extends React.Component<WithStyles<typeof styles>, any> {
 
@@ -53,7 +56,10 @@ class Sidebar extends React.Component<WithStyles<typeof styles>, any> {
                 <List>
                     {getTeamItems()}
                 </List>
-                <Button color={"primary"} variant={"outlined"} className={this.props.classes.sidebarButton}>New Team</Button>
+                <Button color={"primary"} variant={"outlined"} className={this.props.classes.sidebarButton} onClick={openDialog}>
+                    New Team
+                </Button>
+                <CreateTeamDialog/>
             </Drawer>
         )
     }
@@ -64,10 +70,7 @@ const getTeamItems = () => {
         return (
             <>
                 <ListSubheader>{team.name}</ListSubheader>
-                <ListItemLink href={`/teams/${team.id}`}>
-                    <ListItemIcon><Dashboard/></ListItemIcon>
-                    <ListItemText primary={"Team Profile"}/>
-                </ListItemLink>
+                <ListItemLink to={`/teams/${team.id}`} icon={<Dashboard/>} primary={"Team Profile"}/>
             </>
         )
     })

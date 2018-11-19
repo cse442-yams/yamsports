@@ -98,11 +98,26 @@ class UserTeamStore {
                 })
             })
     }
+
+    @action public createTeam() {
+        userTeamUIStore.createTeamDialogOpen = false;
+        const ids = this.playersToAdd.map(p => p.id);
+        userTeamService.createUserTeam(ids, this.newTeamName)
+            .then(resp => {
+                runInAction(() => {
+                    this.userTeams.set(resp.data.id, resp.data);
+                    this.newTeamName = "";
+                    this.playersToAdd = [];
+                    window.history.pushState(null, '', `/teams/${resp.data.id}`)
+                })
+            })
+    }
 }
 
 class UserTeamUIStore {
     @observable editMode = false;
     @observable addPlayerDialogOpen = false;
+    @observable createTeamDialogOpen = false;
 
 }
 

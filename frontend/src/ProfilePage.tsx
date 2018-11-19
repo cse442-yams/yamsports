@@ -2,7 +2,7 @@ import * as React from "react";
 import { Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
 import { Navbar } from "./Navbar";
 import {userStore} from "./auth/UserStore";
-import {Redirect, Route, Switch} from "react-router";
+import {Redirect, Route, RouteComponentProps, RouterProps, Switch, withRouter} from "react-router";
 import {observer} from "mobx-react";
 import Sidebar from "./Sidebar";
 import TeamList from "./userteam/TeamList";
@@ -18,8 +18,12 @@ const styles = (theme: Theme) => createStyles({
     }
 });
 
+interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+
+}
+
 @observer
-class ProfilePage extends React.Component<WithStyles<typeof styles>, any> {
+class ProfilePage extends React.Component<Props, any> {
 
     componentDidMount() {
         userTeamStore.fetchUserTeams();
@@ -29,12 +33,12 @@ class ProfilePage extends React.Component<WithStyles<typeof styles>, any> {
     public render() {
         return(
             <div className={this.props.classes.root}>
-                {userTeamStore.hasTeam && <Redirect to={`/teams/${userTeamStore.defaultTeam.id}`}/>}
 
                 <Navbar/>
                 <Sidebar/>
                 <Switch>
-                    <Route path={"/teams/:teamId"} render={({match}) => <TeamList teamId={Number(match.params.teamId)}/>}/>
+                    {userTeamStore.hasTeam && <Route path={"/"} exact render={() => <Redirect to={`/teams/${userTeamStore.defaultTeam.id}`}/>}/>}
+                    <Route path={"/teams/:teamId"} render={(props) => <TeamList teamId={Number(props.match.params.teamId)} location={props.location}/>}/>
                     {/*<Route path={"*"} render={params => {console.log(params); return "404"}}/>*/}
                 </Switch>
             </div>
@@ -42,4 +46,4 @@ class ProfilePage extends React.Component<WithStyles<typeof styles>, any> {
     }
 }
 
-export default withStyles(styles)(ProfilePage);
+export default withStyles(styles)(withRouter(ProfilePage));

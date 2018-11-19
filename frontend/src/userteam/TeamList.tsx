@@ -36,20 +36,22 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
-    teamId: number
+    teamId: number;
+    location: any;
 }
 
 @observer
 class TeamList extends React.Component<Props, any> {
 
-    public componentDidMount(): void {
-        userTeamStore.fetchUserTeams();
-        userTeamStore.fetchAllPlayers();
-    }
+    // public componentDidMount(): void {
+    //     userTeamStore.fetchUserTeams();
+    //     userTeamStore.fetchAllPlayers();
+    // }
 
     private toggleEditMode = (e: any, checked: boolean) => { userTeamUIStore.editMode = checked};
 
     public render(): React.ReactNode {
+        console.log(this.props.teamId);
         if (userTeamStore.inProgress) {
             return (
                 <main className={this.props.classes.content}>

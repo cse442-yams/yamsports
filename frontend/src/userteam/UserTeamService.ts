@@ -18,6 +18,13 @@ class UserTeamService {
         });
 
     }
+
+    public createUserTeam(playerIds: number[], name: string) {
+        return this.api.post(`/nba/teams/`, {
+            name: name,
+            player_ids: playerIds
+        })
+    }
 }
 
 export const userTeamService = new UserTeamService();
