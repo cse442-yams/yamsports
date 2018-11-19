@@ -1,5 +1,5 @@
 import {action, observable, runInAction} from "mobx";
-import * as Parser from "rss-parser";
+import Parser from "rss-parser";
 import {userTeamStore} from "../userteam/UserTeamStore";
 import {newsfeedService} from "./NewsfeedService";
 
@@ -12,7 +12,7 @@ class NewsfeedStore {
 
     @action public fetchNews() {
         this.newsfeedLoading = true;
-        userTeamStore.allUserTeams.forEach(team => {
+        userTeamStore.userTeams.forEach(team => {
             newsfeedService.fetchNewsfeed(team.id)
                 .then(resp => {
                     this.parser.parseString(resp.data)
