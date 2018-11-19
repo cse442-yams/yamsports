@@ -17,6 +17,7 @@ import {ListItemLink} from "./ListItemLink";
 import Home from "@material-ui/icons/Home";
 import Divider from "@material-ui/core/Divider/Divider";
 import Button from "@material-ui/core/Button/Button";
+import {observer} from "mobx-react";
 
 const sidebarWidth = 240;
 
@@ -28,37 +29,42 @@ const styles = (theme: Theme) => createStyles({
     },
     sidebarPaper: {
         width: sidebarWidth
+    },
+
+    sidebarButton: {
+        margin: `0 ${theme.spacing.unit}px`
     }
 });
 
+@observer
 class Sidebar extends React.Component<WithStyles<typeof styles>, any> {
 
     public render() {
         return (
             <Drawer variant={"permanent"} className={this.props.classes.sidebar} classes={{paper: this.props.classes.sidebarPaper}}>
                 <div className={(this.props.classes.spacer)}/>
-                <List>
-                    <ListItemLink>
-                        <ListItemIcon><Home/></ListItemIcon>
-                        <ListItemText primary={"Home"}/>
-                    </ListItemLink>
-                </List>
-                {userTeamStore.hasTeam && <Divider/>}
+                {/*<List>*/}
+                    {/*<ListItemLink>*/}
+                        {/*<ListItemIcon><Home/></ListItemIcon>*/}
+                        {/*<ListItemText primary={"Home"}/>*/}
+                    {/*</ListItemLink>*/}
+                {/*</List>*/}
+                {/*{userTeamStore.hasTeam && <Divider/>}*/}
                 <List>
                     {getTeamItems()}
                 </List>
-                <Button color={"primary"}>New Team</Button>
+                <Button color={"primary"} variant={"outlined"} className={this.props.classes.sidebarButton}>New Team</Button>
             </Drawer>
         )
     }
 }
 
 const getTeamItems = () => {
-    return userTeamStore.allUserTeams.map(team => {
+    return Array.from(userTeamStore.userTeams.values(), team => {
         return (
             <>
                 <ListSubheader>{team.name}</ListSubheader>
-                <ListItemLink>
+                <ListItemLink href={`/teams/${team.id}`}>
                     <ListItemIcon><Dashboard/></ListItemIcon>
                     <ListItemText primary={"Team Profile"}/>
                 </ListItemLink>

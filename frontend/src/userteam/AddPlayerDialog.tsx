@@ -18,16 +18,20 @@ const styles = (theme: Theme) => createStyles({
 
 const handleClose = () => { userTeamUIStore.addPlayerDialogOpen = false };
 
-const handleSubmit = () => { userTeamStore.submitAddPlayers() };
+const handleSubmit = (teamId: number) => () => { userTeamStore.submitAddPlayers(teamId) };
 
-export const AddPlayerDialog = withStyles(styles)(observer((props: WithStyles<typeof styles>) => (
+interface Props extends WithStyles<typeof styles> {
+    teamId: number;
+}
+
+export const AddPlayerDialog = withStyles(styles)(observer((props: Props) => (
     <Dialog open={userTeamUIStore.addPlayerDialogOpen} onClose={handleClose} scroll={"body"} PaperProps={{style: {backgroundColor: "#eee"}}}>
         <DialogTitle>Add players</DialogTitle>
         <DialogContent className={props.classes.content}>
             <PlayerSelectList/>
         </DialogContent>
         <DialogActions>
-            <Button variant={"contained"} color={"primary"} onClick={handleSubmit}>Submit</Button>
+            <Button variant={"contained"} color={"primary"} onClick={handleSubmit(props.teamId)}>Submit</Button>
         </DialogActions>
     </Dialog>
 )));

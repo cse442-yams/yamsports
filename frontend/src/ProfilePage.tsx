@@ -2,10 +2,11 @@ import * as React from "react";
 import { Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
 import { Navbar } from "./Navbar";
 import {userStore} from "./auth/UserStore";
-import {Redirect} from "react-router";
+import {Redirect, Route, Switch} from "react-router";
 import {observer} from "mobx-react";
 import Sidebar from "./Sidebar";
 import TeamList from "./userteam/TeamList";
+import {userTeamStore} from "./userteam/UserTeamStore";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -20,18 +21,22 @@ const styles = (theme: Theme) => createStyles({
 @observer
 class ProfilePage extends React.Component<WithStyles<typeof styles>, any> {
 
+    componentDidMount() {
+        userTeamStore.fetchUserTeams();
+        userTeamStore.fetchAllPlayers();
+    }
+
     public render() {
-        if(!userStore.isAuthenticated) {
-            return(
-                <Redirect to={"/"}/>
-            )
-        }
         return(
             <div className={this.props.classes.root}>
+                {userTeamStore.hasTeam && <Redirect to={`/teams/${userTeamStore.defaultTeam.id}`}/>}
 
                 <Navbar/>
                 <Sidebar/>
-                <TeamList/>
+                <Switch>
+                    <Route path={"/teams/:teamId"} render={({match}) => <TeamList teamId={Number(match.params.teamId)}/>}/>
+                    {/*<Route path={"*"} render={params => {console.log(params); return "404"}}/>*/}
+                </Switch>
             </div>
         )
     }
