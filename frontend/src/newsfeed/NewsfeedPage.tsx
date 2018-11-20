@@ -10,11 +10,21 @@ const styles = (theme: Theme) => createStyles({
 
 });
 
+interface Props extends WithStyles<typeof styles> {
+    teamId: number;
+    location: any;
+}
+
 @observer
-class NewsfeedPage extends React.Component<WithStyles<typeof styles>> {
+class NewsfeedPage extends React.Component<Props> {
+
 
     public componentDidMount(): void {
-        newsfeedStore.fetchNews();
+        newsfeedStore.observeNews();
+    }
+
+    public componentWillUnmount(): void {
+        newsfeedStore.stopObservingNews();
     }
 
     public render(): React.ReactNode {

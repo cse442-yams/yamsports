@@ -49,7 +49,7 @@ class UserTeamStore {
         this.inProgress = true;
         userTeamService.fetchUserTeams()
             .then(resp => {
-                runInAction(() => {
+                runInAction("Set user teams",() => {
                     this.setUserTeams(resp.data);
                     this.inProgress = false;
                 });
@@ -60,7 +60,7 @@ class UserTeamStore {
 
         userTeamService.fetchAllPlayers()
             .then(resp => {
-                runInAction(() => {
+                runInAction("Set all players", () => {
                     this.allPlayers = resp.data;
                 })
             })
@@ -75,7 +75,7 @@ class UserTeamStore {
         userTeamUIStore.editMode = false;
         userTeamService.updateUserTeam(teamId, Array.from(newTeam), team.name)
             .then(resp => {
-                runInAction(() => {
+                runInAction("Add players to team", () => {
                     this.userTeams.set(team.id, resp.data);
                     this.inProgress = false;
                 })
@@ -89,10 +89,12 @@ class UserTeamStore {
         team.players = newTeam;
         userTeamService.updateUserTeam(teamId, newTeam.map(p => p.id), team.name)
             .then(resp => {
-                this.userTeams.set(team.id, resp.data);
+                runInAction("Remove players from team", () => {
+                    this.userTeams.set(team.id, resp.data);
+                });
             })
             .catch(reason => {
-                runInAction(() => {
+                runInAction("Remove players failed", () => {
                     team.players = oldTeam;
                     // TODO: error message
                 })
@@ -104,7 +106,7 @@ class UserTeamStore {
         const ids = this.playersToAdd.map(p => p.id);
         userTeamService.createUserTeam(ids, this.newTeamName)
             .then(resp => {
-                runInAction(() => {
+                runInAction("Create new team", () => {
                     this.userTeams.set(resp.data.id, resp.data);
                     this.newTeamName = "";
                     this.playersToAdd = [];
