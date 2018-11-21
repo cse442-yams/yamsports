@@ -36,6 +36,15 @@ const getHostname = (link: string) => {
     return url.hostname;
 };
 
+const getDateString = (isoDate: string) => {
+    const ts = Date.parse(isoDate);
+    if (!ts) {
+        return "No date available";
+    } else {
+        return new Date(ts).toLocaleString();
+    }
+};
+
 export const NewsCard = withStyles(styles)((props: Props) => (
     <Card square className={props.classes.card}>
         <CardContent>
@@ -45,7 +54,9 @@ export const NewsCard = withStyles(styles)((props: Props) => (
                 </Typography>
                 <IconButton className={props.classes.linkIcon} href={props.newsItem.link} target={"_blank"}><OpenInNewIcon/></IconButton>
             </div>
-            <Typography className={props.classes.source} color={"textSecondary"} gutterBottom>{getHostname(props.newsItem.link)}</Typography>
+            <Typography className={props.classes.source} color={"textSecondary"} gutterBottom>
+                {`${getHostname(props.newsItem.link)} - ${getDateString(props.newsItem.isoDate)}`}
+            </Typography>
             <Typography><span dangerouslySetInnerHTML={{__html: props.newsItem.content}}/></Typography>
         </CardContent>
     </Card>
