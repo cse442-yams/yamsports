@@ -5,8 +5,15 @@ import {observer} from "mobx-react";
 import {newsfeedStore} from "./NewsfeedStore";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Typography from "@material-ui/core/Typography/Typography";
+import {NewsCard} from "./NewsCard";
 
 const styles = (theme: Theme) => createStyles({
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing.unit * 3
+    },
+
+    spacer: theme.mixins.toolbar,
 
 });
 
@@ -28,24 +35,31 @@ class NewsfeedPage extends React.Component<Props> {
     }
 
     public render(): React.ReactNode {
+        const { classes } = this.props;
         return (
-            <div>
-                <Typography variant={"headline"} gutterBottom>Team News</Typography>
-                {getContent()}
-            </div>
+            <main className={classes.content}>
+                <div className={classes.spacer}/>
+                <Typography variant={"display3"} gutterBottom>Team News</Typography>
+                {getContent(this.props.teamId)}
+            </main>
         )
     }
 }
 
-const getContent = () => {
+const getContent = (teamId: number) => {
     if (newsfeedStore.newsfeedLoading) {
         return (
             <CircularProgress/>
         )
     } else {
-        return (
-            <div></div>
-        )
+        const feed: any = newsfeedStore.teamNewsfeeds.get(teamId);
+        if (feed) {
+            return (
+                feed.items.map((item: any) => (
+                    <NewsCard newsItem={item}/>
+                ))
+            )
+        }
     }
 };
 
