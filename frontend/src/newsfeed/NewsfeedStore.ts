@@ -15,7 +15,7 @@ class NewsfeedStore {
         this.disposer = reaction(
             () => Array.from(userTeamStore.userTeams.values()),
             (teams) => this.fetchNews(teams),
-            {name: "Fetch news"}
+            {name: "Fetch news", fireImmediately: true}
         );
     }
 
@@ -32,7 +32,7 @@ class NewsfeedStore {
                 .then(resp => {
                     this.parser.parseString(resp.data)
                         .then(feed => {
-                            runInAction(() => {
+                            runInAction("Set news", () => {
                                 this.teamNewsfeeds.set(team.id, feed);
                                 this.newsfeedLoading = false;
                             })
