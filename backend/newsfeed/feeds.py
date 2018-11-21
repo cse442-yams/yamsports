@@ -61,4 +61,7 @@ class UserTeamNews(Feed):
     def item_link(self, item):
         return item.link
 
+    def item_pubdate(self, item):
+        return item.pub_date
+
 
