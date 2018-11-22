@@ -19,6 +19,7 @@ import Divider from "@material-ui/core/Divider/Divider";
 import Button from "@material-ui/core/Button/Button";
 import {observer} from "mobx-react";
 import {CreateTeamDialog} from "./userteam/CreateTeamDialog";
+import RssFeedIcon from "@material-ui/icons/RssFeed";
 
 const sidebarWidth = 240;
 
@@ -71,6 +72,7 @@ const getTeamItems = () => {
             <>
                 <ListSubheader>{team.name}</ListSubheader>
                 <ListItemLink to={`/teams/${team.id}`} icon={<Dashboard/>} primary={"Team Profile"}/>
+                <ListItemLink to={`/teams/${team.id}/news`} icon={<RssFeedIcon/>} primary={"News"}/>
             </>
         )
     })

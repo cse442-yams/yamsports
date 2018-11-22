@@ -27,16 +27,16 @@ def get_team_newsitems_query(team: UserTeam):
 
 class UserTeamNews(Feed):
 
-    def __call__(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return super().__call__(request, *args, **kwargs)
+    # def __call__(self, request, *args, **kwargs):
+    #     if not request.user.is_authenticated:
+    #         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+    #     else:
+    #         return super().__call__(request, *args, **kwargs)
 
     def get_object(self, request, team_id):
         team = UserTeam.objects.get(pk=team_id)
-        if team is not None and team.user != request.user:
-            raise PermissionDenied
+        # if team is not None and team.user != request.user:
+        #     raise PermissionDenied
 
         return team
 
@@ -60,5 +60,8 @@ class UserTeamNews(Feed):
 
     def item_link(self, item):
         return item.link
+
+    def item_pubdate(self, item):
+        return item.pub_date
 
 
