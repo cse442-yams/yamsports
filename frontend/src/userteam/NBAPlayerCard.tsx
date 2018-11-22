@@ -30,30 +30,32 @@ const styles = (theme: Theme) => createStyles({
 
 interface IProps extends WithStyles<typeof styles> {
     player: NBAPlayer;
+    teamId: number;
 }
 
 const getImageUrl = (nbaId: number) => {
     return `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${nbaId}.png`
 };
 
-const handleDelete = (id: number) => () => {
-    userTeamStore.removePlayer(id);
+const handleDelete = (id: number, teamId: number) => () => {
+    userTeamStore.removePlayer(id, teamId);
 };
 
 export const NBAPlayerCard = withStyles(styles)((props: IProps) => (
     <Card className={props.classes.card}>
         {/*<CardActionArea>*/}
-            <CardMedia className={props.classes.media} image={getImageUrl(props.player.nba_id)}>
-                {userTeamUIStore.editMode && <IconButton onClick={handleDelete(props.player.id)} className={props.classes.deleteButton}><DeleteIcon/></IconButton>}
-            </CardMedia>
+        <CardMedia className={props.classes.media} image={getImageUrl(props.player.nba_id)}>
+            {userTeamUIStore.editMode && <IconButton onClick={handleDelete(props.player.id, props.teamId)}
+                                                     className={props.classes.deleteButton}><DeleteIcon/></IconButton>}
+        </CardMedia>
 
-            <CardContent>
-                <Typography gutterBottom variant={"headline"}>{`${props.player.first_name} ${props.player.last_name}`}
-                </Typography>
-                <Typography variant={"subheading"} color={"textSecondary"}>
-                    {`${props.player.current_team.abbr} | ${props.player.jersey} | ${props.player.position}`}
-                </Typography>
-            </CardContent>
+        <CardContent>
+            <Typography gutterBottom variant={"headline"}>{`${props.player.first_name} ${props.player.last_name}`}
+            </Typography>
+            <Typography variant={"subheading"} color={"textSecondary"}>
+                {`${props.player.current_team.abbr} | ${props.player.jersey} | ${props.player.position}`}
+            </Typography>
+        </CardContent>
         {/*</CardActionArea>*/}
     </Card>
 ));

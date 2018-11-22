@@ -113,6 +113,7 @@ class AuthStore {
     @action public logout() {
         this.setToken(null);
         userStore.forgetUser();
+        window.history.replaceState(null, '', '/')
     }
 
     @action public setToken(token: string | null) {
