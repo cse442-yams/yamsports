@@ -23,6 +23,6 @@ export const App = observer(() => (
         <BrowserRouter>
             {authStore.token ? <ProfilePage/> : <LandingPage/>}
         </BrowserRouter>
-        <DevTools/>
+        {process.env.NODE_ENV === "development" && <DevTools/>}
     </MuiThemeProvider>
 ));
