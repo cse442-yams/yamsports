@@ -32,11 +32,12 @@ class UserTeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTeam
-        fields = ('id', 'players', 'player_ids')
+        fields = ('id', 'players', 'player_ids', 'name')
 
     def create(self, validated_data):
         user = validated_data['user']
-        team = UserTeam(user=user)
+        name = validated_data['name']
+        team = UserTeam(user=user, name=name)
         team.save()
         team.players.set(validated_data['players'])
         team.save()
@@ -44,5 +45,7 @@ class UserTeamSerializer(serializers.ModelSerializer):
 
     def update(self, instance: UserTeam, validated_data):
         instance.players.set(validated_data['players'])
+        instance.name = validated_data['name']
+        instance.save()
         return instance
 

@@ -34,5 +34,6 @@ class NBAPlayer(models.Model):
 class UserTeam(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     players = models.ManyToManyField(NBAPlayer)
+    name = models.CharField(max_length=64, default="My Team")
 
 
