@@ -39,6 +39,11 @@ class NBAPlayer(models.Model):
         # TODO: handle when there isn't a next game
         return self.current_team.all_games().filter(start_time_utc__gte=now()).order_by('start_time_utc')[0]
 
+    def stats_prev_game(self):
+        return self.playergamestats_set.filter(
+            game__start_time_utc__lte=now(), game__gamemeta__status_num=3
+        ).order_by('-game__start_time_utc')[0]
+
 
 class NBAGame(models.Model):
     nba_game_id = models.CharField(max_length=16, unique=True, db_index=True)

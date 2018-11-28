@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from nba_profile.models import NBATeam, NBAPlayer, UserTeam, NBAGame
+from nba_profile.models import NBATeam, NBAPlayer, UserTeam, NBAGame, PlayerGameStats
 
 
 class NBATeamSerializer(serializers.ModelSerializer):
@@ -19,6 +19,14 @@ class NBAGameSerializer(serializers.ModelSerializer):
         exclude = ('nugget',)
 
 
+class PlayerGameStatsSerializer(serializers.ModelSerializer):
+    game = NBAGameSerializer()
+
+    class Meta:
+        model = PlayerGameStats
+        exclude = ('player', 'team')
+
+
 class NBAPlayerBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = NBAPlayer
@@ -28,6 +36,7 @@ class NBAPlayerBasicSerializer(serializers.ModelSerializer):
 class NBAPlayerDetailSerializer(serializers.ModelSerializer):
     current_team = NBATeamSerializer(read_only=True)
     next_game = NBAGameSerializer()
+    stats_prev_game = PlayerGameStatsSerializer()
 
     class Meta:
         model = NBAPlayer
