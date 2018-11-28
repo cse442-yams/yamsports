@@ -31,6 +31,14 @@ class NBAPlayer(models.Model):
     country = models.CharField(max_length=256, null=True)
 
 
+class NBAGame(models.Model):
+    nba_game_id = models.PositiveIntegerField(unique=True, db_index=True)
+    start_time_utc = models.DateTimeField()
+    nugget = models.TextField(blank=True)
+    home_team = models.ForeignKey(NBATeam, on_delete=models.CASCADE, related_name='home_games')
+    visitor_team = models.ForeignKey(NBATeam, on_delete=models.CASCADE, related_name='away_games')
+
+
 class UserTeam(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     players = models.ManyToManyField(NBAPlayer)
