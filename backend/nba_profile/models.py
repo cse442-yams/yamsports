@@ -47,6 +47,7 @@ class NBAPlayer(models.Model):
 
 class NBAGame(models.Model):
     nba_game_id = models.CharField(max_length=16, unique=True, db_index=True)
+    season = models.IntegerField(default=2018)  # TODO: future-proofing
     start_time_utc = models.DateTimeField()
     nugget = models.TextField(blank=True)
     home_team = models.ForeignKey(NBATeam, on_delete=models.CASCADE, related_name='home_games')
