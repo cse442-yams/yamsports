@@ -53,3 +53,60 @@ class UserTeam(models.Model):
     name = models.CharField(max_length=64, default="My Team")
 
 
+class TeamGameStats(models.Model):
+    team = models.ForeignKey(NBATeam, on_delete=models.PROTECT)
+    game = models.ForeignKey(NBAGame, on_delete=models.PROTECT)
+    is_home = models.BooleanField()
+
+    points = models.PositiveSmallIntegerField()
+    fgm = models.PositiveSmallIntegerField()
+    fga = models.PositiveSmallIntegerField()
+    ftm = models.PositiveSmallIntegerField()
+    fta = models.PositiveSmallIntegerField()
+    tpm = models.PositiveSmallIntegerField()
+    tpa = models.PositiveSmallIntegerField()
+    off_reb = models.PositiveSmallIntegerField()
+    def_reb = models.PositiveSmallIntegerField()
+    tot_reb = models.PositiveSmallIntegerField()
+    assists = models.PositiveSmallIntegerField()
+    pf = models.PositiveSmallIntegerField()
+    steals = models.PositiveSmallIntegerField()
+    turnovers = models.PositiveSmallIntegerField()
+    blocks = models.PositiveSmallIntegerField()
+    plusMinus = models.FloatField()
+
+    fast_break_points = models.PositiveSmallIntegerField(null=True)
+    points_in_paint = models.PositiveSmallIntegerField(null=True)
+    biggest_lead = models.PositiveSmallIntegerField(null=True)
+    second_chance_points = models.PositiveSmallIntegerField(null=True)
+    points_off_turnovers = models.PositiveSmallIntegerField(null=True)
+    longest_run = models.PositiveSmallIntegerField(null=True)
+
+
+class PlayerGameStats(models.Model):
+    player = models.ForeignKey(NBAPlayer, on_delete=models.PROTECT)
+    team = models.ForeignKey(NBATeam, on_delete=models.PROTECT)
+    game = models.ForeignKey(NBAGame, on_delete=models.PROTECT)
+
+    position = models.CharField(max_length=4, blank=True)
+    dnp = models.BooleanField(default=False)
+    dnp_text = models.CharField(max_length=64, blank=True)
+
+    points = models.PositiveSmallIntegerField(null=True)
+    fgm = models.PositiveSmallIntegerField(null=True)
+    fga = models.PositiveSmallIntegerField(null=True)
+    ftm = models.PositiveSmallIntegerField(null=True)
+    fta = models.PositiveSmallIntegerField(null=True)
+    tpm = models.PositiveSmallIntegerField(null=True)
+    tpa = models.PositiveSmallIntegerField(null=True)
+    off_reb = models.PositiveSmallIntegerField(null=True)
+    def_reb = models.PositiveSmallIntegerField(null=True)
+    tot_reb = models.PositiveSmallIntegerField(null=True)
+    assists = models.PositiveSmallIntegerField(null=True)
+    pf = models.PositiveSmallIntegerField(null=True)
+    steals = models.PositiveSmallIntegerField(null=True)
+    turnovers = models.PositiveSmallIntegerField(null=True)
+    blocks = models.PositiveSmallIntegerField(null=True)
+    plusMinus = models.FloatField(null=True)
+
+
