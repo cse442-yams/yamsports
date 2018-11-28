@@ -27,7 +27,7 @@ export interface UserTeam {
 
 class UserTeamStore {
     @observable inProgress = false;
-    @observable userTeams: Map<number, UserTeam> = new Map<number, UserTeam>();
+    userTeams: Map<number, UserTeam> = observable.map(new Map<number, UserTeam>(), {deep: false});
     @observable.shallow allPlayers: NBAPlayer[] = [];
 
     @observable.shallow playersToAdd: NBAPlayer[] = [];
