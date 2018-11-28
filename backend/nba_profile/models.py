@@ -44,6 +44,12 @@ class NBAPlayer(models.Model):
             game__start_time_utc__lte=now(), game__gamemeta__status_num=3
         ).order_by('-game__start_time_utc')[0]
 
+    def stats_games_timeseries(self):
+        # TODO: obviously season shouldn't be hardcoded
+        return self.playergamestats_set.filter(
+            game__start_time_utc__lte=now(), game__gamemeta__status_num=3, game__season=2018
+        ).order_by('game__start_time_utc')
+
 
 class NBAGame(models.Model):
     nba_game_id = models.CharField(max_length=16, unique=True, db_index=True)

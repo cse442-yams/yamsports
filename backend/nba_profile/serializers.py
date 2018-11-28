@@ -37,6 +37,7 @@ class NBAPlayerDetailSerializer(serializers.ModelSerializer):
     current_team = NBATeamSerializer(read_only=True)
     next_game = NBAGameSerializer()
     stats_prev_game = PlayerGameStatsSerializer()
+    stats_games_timeseries = PlayerGameStatsSerializer(many=True)
 
     class Meta:
         model = NBAPlayer
