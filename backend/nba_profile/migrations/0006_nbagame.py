@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='NBAGame',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nba_game_id', models.PositiveIntegerField(db_index=True, unique=True)),
+                ('nba_game_id', models.CharField(max_length=16, db_index=True, unique=True)),
                 ('start_time_utc', models.DateTimeField()),
                 ('nugget', models.TextField(blank=True)),
                 ('home_team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='home_games', to='nba_profile.NBATeam')),
