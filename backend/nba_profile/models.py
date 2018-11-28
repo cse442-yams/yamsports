@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 from users.models import CustomUser
 
@@ -12,6 +13,9 @@ class NBATeam(models.Model):
     division = models.CharField(max_length=32)
     code = models.CharField(max_length=32)
     min_year = models.PositiveSmallIntegerField()
+
+    def all_games(self):
+        return self.home_games.all() | self.away_games.all()
 
 
 class NBAPlayer(models.Model):
@@ -29,6 +33,10 @@ class NBAPlayer(models.Model):
     college_name = models.CharField(max_length=128, null=True)
     last_affiliation = models.CharField(max_length=128, null=True)
     country = models.CharField(max_length=256, null=True)
+
+    def next_game(self):
+        # TODO: handle when there isn't a next game
+        return self.current_team.all_games().filter(start_time_utc__gte=now()).order_by('start_time_utc')[0]
 
 
 class NBAGame(models.Model):
