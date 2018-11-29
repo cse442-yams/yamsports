@@ -19,8 +19,17 @@ import Collapse from "@material-ui/core/Collapse/Collapse";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import {Simulate} from "react-dom/test-utils";
+import {StatsGraph} from "./StatsGraph";
+import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = (theme: Theme) => createStyles({
+    graphRow: {
+        backgroundColor: theme.palette.background.default
+    },
+
+    graphPaper: {
+        margin: "0 5px"
+    }
 });
 
 interface Props extends WithStyles<typeof styles> {
@@ -115,15 +124,37 @@ const StatsTableHead = (props: any) => {
 
 };
 
-const getExpandedContent = (show: boolean, player: NBAPlayer, nCols: number) => {
+const getFormattedTimeseries = (player: NBAPlayer) => {
+    return player.stats_games_timeseries.map(({game, ...stats}) => {
+        return {date: new Date(game.start_time_utc).toLocaleDateString(), ...stats}
+    })
+};
+
+const pointsLabels = ['points'];
+const shootingLabels = ['fgm', 'ftm', 'tpm'];
+const supportLabels = ['offReb', 'defReb', 'totReb', 'assists', 'pFouls', 'steals', 'turnovers', 'blocks'];
+
+const getExpandedContent = (show: boolean, player: NBAPlayer, nCols: number, classes: any) => {
     if (!show) { return null; }
+    const data = getFormattedTimeseries(player);
     return (
-        <TableRow>
-            <TableCell colSpan={nCols}>
+        <TableRow className={classes.graphRow}>
+            <TableCell colSpan={nCols + 1}>
                 <Collapse in={true} unmountOnExit>
-                    <Paper style={{height: "500px", width: "600px"}}>
-                        Placeholder
-                    </Paper>
+                    <div style={{display: "flex", justifyContent: "space-around", marginTop: "10px", marginBottom: "10px"}}>
+                        <Paper style={{padding: "5px"}} className={classes.graphPaper}>
+                            <Typography variant={"title"}>Points</Typography>
+                            <StatsGraph data={data} labels={pointsLabels} yLabel={"Points"}/>
+                        </Paper>
+                        <Paper style={{padding: "5px"}} className={classes.graphPaper}>
+                            <Typography variant={"title"}>Shooting</Typography>
+                            <StatsGraph data={data} labels={shootingLabels} yLabel={"Count"}/>
+                        </Paper>
+                        <Paper style={{padding: "5px"}} className={classes.graphPaper}>
+                            <Typography variant={"title"}>Support</Typography>
+                            <StatsGraph data={data} labels={supportLabels} yLabel={"Count"}/>
+                        </Paper>
+                    </div>
                 </Collapse>
             </TableCell>
         </TableRow>
@@ -177,7 +208,7 @@ class StatsTable extends React.Component<Props> {
                                             <DenseCell numeric>{stats[k]}</DenseCell>
                                         ))}
                                     </TableRow>
-                                    {getExpandedContent(this.showGraph === playerObj.id, playerObj, statColumns.length)}
+                                    {getExpandedContent(this.showGraph === playerObj.id, playerObj, statColumns.length, classes)}
                                 </>
                             ))}
                         </TableBody>
