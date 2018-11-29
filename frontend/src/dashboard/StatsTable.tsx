@@ -10,8 +10,15 @@ import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import TableSortLabel from "@material-ui/core/TableSortLabel/TableSortLabel";
 import Paper from "@material-ui/core/Paper/Paper";
 import Table from "@material-ui/core/Table/Table";
-import {observable} from "mobx";
+import {observable, runInAction} from "mobx";
 import TableBody from "@material-ui/core/TableBody/TableBody";
+import {observer} from "mobx-react";
+import Chip from "@material-ui/core/Chip/Chip";
+import Avatar from "@material-ui/core/Avatar/Avatar";
+import Collapse from "@material-ui/core/Collapse/Collapse";
+import TimelineIcon from "@material-ui/icons/Timeline";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import {Simulate} from "react-dom/test-utils";
 
 const styles = (theme: Theme) => createStyles({
 });
@@ -19,6 +26,10 @@ const styles = (theme: Theme) => createStyles({
 interface Props extends WithStyles<typeof styles> {
     team: UserTeam;
 }
+
+const getImageUrl = (nbaId: number) => {
+    return `https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${nbaId}.png`
+};
 
 const desc = (a: any, b: any, orderBy: any) => {
     if (b[orderBy] < a[orderBy]) {
@@ -70,22 +81,33 @@ const formatPlayerStats = (player: NBAPlayer) => {
     };
 };
 
+const DenseCell = withStyles({paddingDense: {padding: '4px 12px 4px 6px'}})(TableCell);
 
 const StatsTableHead = (props: any) => {
     const createSortHandler = (property: any) => (event: any) => props.onRequestSort(event, property);
-    const { order, orderBy, columns } = props;
+    const { order, orderBy, columns, classes } = props;
+    const [name, ...cols] = columns;
 
     return (
         <TableHead>
             <TableRow>
-                {columns.map((col: any) => (
-                    <TableCell numeric key={col}>
+                <TableCell padding={"checkbox"}>
+                </TableCell>
+                <TableCell>
+                    <Tooltip title={"Sort"} placement={"bottom-end"} enterDelay={300}>
+                        <TableSortLabel active={orderBy === name} direction={order} onClick={createSortHandler(name)}>
+                            {name}
+                        </TableSortLabel>
+                    </Tooltip>
+                </TableCell>
+                {cols.map((col: any) => (
+                    <DenseCell className={classes.cell} numeric key={col}>
                         <Tooltip title={"Sort"} placement={"bottom-end"} enterDelay={300}>
                             <TableSortLabel active={orderBy === col} direction={order} onClick={createSortHandler(col)}>
                                 {col}
                             </TableSortLabel>
                         </Tooltip>
-                    </TableCell>
+                    </DenseCell>
                 ))}
             </TableRow>
         </TableHead>
@@ -93,33 +115,70 @@ const StatsTableHead = (props: any) => {
 
 };
 
+const getExpandedContent = (show: boolean, player: NBAPlayer, nCols: number) => {
+    if (!show) { return null; }
+    return (
+        <TableRow>
+            <TableCell colSpan={nCols}>
+                <Collapse in={true} unmountOnExit>
+                    <Paper style={{height: "500px", width: "600px"}}>
+                        Placeholder
+                    </Paper>
+                </Collapse>
+            </TableCell>
+        </TableRow>
+    )
+};
+
+@observer
 class StatsTable extends React.Component<Props> {
     @observable order = 'asc';
     @observable orderBy = 'Name';
+    @observable showGraph = -1;
 
     private handleRequestSort = (event: any, property: string) => {
         const orderBy = property;
-    }
+        let order = 'desc';
+        if (this.orderBy === property && this.order === 'desc') {
+            order = 'asc';
+        }
+        runInAction("Set table sort", () => {
+            this.order = order;
+            this.orderBy = property;
+        });
+
+    };
+
+    private handleGraphShow = (playerId: any) => (event: any) => {
+        this.showGraph = playerId === this.showGraph ? -1 : playerId;
+    };
 
     render(): React.ReactNode {
         const rows = stableSort(this.props.team.players.map(formatPlayerStats), getSorting(this.order, this.orderBy));
+        const classes = this.props.classes;
 
         return (
             <Paper>
                 <div>
                     <Table padding={"dense"}>
-                        <StatsTableHead columns={statColumns} order={this.order} orderBy={this.orderBy} onRequestSort={this.handleRequestSort}/>
+                        <StatsTableHead classes={classes} columns={statColumns} order={this.order} orderBy={this.orderBy} onRequestSort={this.handleRequestSort}/>
                         <TableBody>
                             {rows.map(({playerObj, Name, ...stats}: typeof rows) => (
-                                <TableRow hover key={playerObj.id}>
-                                    <TableCell>
-                                        {Name}
-                                    </TableCell>
+                                <>
+                                    <TableRow hover key={playerObj.id}>
+                                        <TableCell padding={"checkbox"}>
+                                            <IconButton onClick={this.handleGraphShow(playerObj.id)}><TimelineIcon/></IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip avatar={<Avatar src={getImageUrl(playerObj.nba_id)}/>} label={Name}/>
+                                        </TableCell>
 
-                                    {Object.keys(stats).map((k: any) => (
-                                        <TableCell numeric>{stats[k]}</TableCell>
-                                    ))}
-                                </TableRow>
+                                        {Object.keys(stats).map((k: any) => (
+                                            <DenseCell numeric>{stats[k]}</DenseCell>
+                                        ))}
+                                    </TableRow>
+                                    {getExpandedContent(this.showGraph === playerObj.id, playerObj, statColumns.length)}
+                                </>
                             ))}
                         </TableBody>
                     </Table>
