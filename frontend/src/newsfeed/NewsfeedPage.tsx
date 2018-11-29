@@ -37,11 +37,10 @@ class NewsfeedPage extends React.Component<Props> {
     public render(): React.ReactNode {
         const { classes } = this.props;
         return (
-            <main className={classes.content}>
-                <div className={classes.spacer}/>
+            <>
                 <Typography variant={"display3"} gutterBottom>Team News</Typography>
                 {getContent(this.props.teamId)}
-            </main>
+            </>
         )
     }
 }

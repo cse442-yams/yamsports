@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 import TeamList from "./userteam/TeamList";
 import {userTeamStore} from "./userteam/UserTeamStore";
 import NewsfeedPage from "./newsfeed/NewsfeedPage";
+import TeamDashboardPage from "./dashboard/TeamDashboardPage";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -16,7 +17,9 @@ const styles = (theme: Theme) => createStyles({
     content: {
         flexGrow: 1,
         padding: theme.spacing.unit * 3
-    }
+    },
+
+    spacer: theme.mixins.toolbar,
 });
 
 interface Props extends WithStyles<typeof styles>, RouteComponentProps {
@@ -37,17 +40,24 @@ class ProfilePage extends React.Component<Props, any> {
 
                 <Navbar/>
                 <Sidebar/>
-                <Switch>
-                    {userTeamStore.hasTeam &&
-                    <Route path={"/"} exact render={() => <Redirect to={`/teams/${userTeamStore.defaultTeam.id}`}/>}/>}
-                    <Route exact path={"/teams/:teamId"}
-                           render={(props) => <TeamList teamId={Number(props.match.params.teamId)}
-                                                        location={props.location}/>}
-                    />
-                    <Route path={"/teams/:teamId/news"}
-                        render={(props) => <NewsfeedPage teamId={Number(props.match.params.teamId)} location={props.location}/>}
-                    />
-                </Switch>
+                <main className={this.props.classes.content}>
+                    <div className={this.props.classes.spacer}/>
+                    <Switch>
+                        {userTeamStore.hasTeam &&
+                        <Route path={"/"} exact render={() => <Redirect to={`/teams/${userTeamStore.defaultTeam.id}`}/>}/>}
+                        <Route exact path={"/teams/:teamId"}
+                               render={(props) => <TeamDashboardPage teamId={Number(props.match.params.teamId)}
+                                                            location={props.location}/>}
+                        />
+                        <Route exact path={"/teams/:teamId/roster"}
+                               render={(props) => <TeamList teamId={Number(props.match.params.teamId)}
+                                                            location={props.location}/>}
+                        />
+                        <Route path={"/teams/:teamId/news"}
+                               render={(props) => <NewsfeedPage teamId={Number(props.match.params.teamId)} location={props.location}/>}
+                        />
+                    </Switch>
+                </main>
             </div>
         )
     }
