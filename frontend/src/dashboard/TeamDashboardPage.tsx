@@ -5,6 +5,7 @@ import {userTeamStore} from "../userteam/UserTeamStore";
 import Typography from "@material-ui/core/Typography/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {Redirect} from "react-router";
+import StatsTable from "./StatsTable";
 
 
 const styles = (theme: Theme) => createStyles({
@@ -38,7 +39,10 @@ class TeamDashboardPage extends React.Component<Props> {
         }
 
         return (
-            <Typography variant={"display3"} gutterBottom>{team.name}</Typography>
+            <>
+                <Typography variant={"display3"} gutterBottom>{team.name}</Typography>
+                <StatsTable team={team}/>
+            </>
         )
     }
 }
