@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '84ehh#+7k8_wq_t9ya5vf4x94e6#eq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yamsports.surge.sh', 'yamsports.heroku.com', '127.0.0.1']
 
 
 # Application definition
