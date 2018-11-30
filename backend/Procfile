@@ -1,0 +1,1 @@
+web: gunicorn yamsports.wsgi --log-file -
