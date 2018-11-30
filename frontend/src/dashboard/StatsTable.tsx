@@ -283,7 +283,7 @@ class StatsTable extends React.Component<Props> {
                                         <Chip avatar={<Avatar src={getImageUrl(player.nba_id)}/>} label={`${player.first_name} ${player.last_name}`}/>
                                     </TableCell>
                                     <TableCell>
-                                        <Chip avatar={<Avatar src={getTeamLogo(getOpposingTeam(player))}/>} label={`${getNextGameType(player)} ${getOpposingTeam(player).abbr}`}/>
+                                        <Chip avatar={<Avatar src={getTeamLogo(getOpposingTeam(player))}/>} label={`${getNextGameType(player)} ${getOpposingTeam(player).abbr} ${new Date(player.next_game.start_time_utc).toLocaleString()}`}/>
                                     </TableCell>
 
                                 </TableRow>
