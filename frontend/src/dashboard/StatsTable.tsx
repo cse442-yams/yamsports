@@ -2,7 +2,7 @@ import * as React from "react";
 import {Theme, WithStyles} from "@material-ui/core";
 import createStyles from "@material-ui/core/styles/createStyles";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {NBAPlayer, UserTeam} from "../userteam/UserTeamStore";
+import {NBAPlayer, NBATeam, UserTeam} from "../userteam/UserTeamStore";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
@@ -21,6 +21,9 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import {Simulate} from "react-dom/test-utils";
 import {StatsGraph} from "./StatsGraph";
 import Typography from "@material-ui/core/Typography/Typography";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Tabs from "@material-ui/core/Tabs/Tabs";
+import Tab from "@material-ui/core/Tab/Tab";
 
 const styles = (theme: Theme) => createStyles({
     graphRow: {
@@ -29,6 +32,10 @@ const styles = (theme: Theme) => createStyles({
 
     graphPaper: {
         margin: "0 5px"
+    },
+
+    tableWrapper: {
+        overflowX: "auto"
     }
 });
 
@@ -124,6 +131,34 @@ const StatsTableHead = (props: any) => {
 
 };
 
+const toolbarStyles = (theme: Theme) => createStyles({
+    title: {
+        flex: "0 0 auto"
+    },
+    spacer: {
+        flexGrow: 1
+    }
+})
+
+const StatsTableToolbar = withStyles(toolbarStyles)((props: any) => {
+    const classes = props.classes
+
+    return (
+        <Toolbar>
+            <div className={classes.title}>
+                <Typography variant={"h6"}>{props.tabValue === 0 ? "Last Game Stats" : "Next Matchup"}</Typography>
+            </div>
+
+            <div className={classes.spacer}>
+            </div>
+            <Tabs value={props.tabValue} onChange={props.handleTabChange}>
+                <Tab label={"Last Game Stats"}/>
+                <Tab label={"Next Matchup"}/>
+            </Tabs>
+        </Toolbar>
+    )
+});
+
 const getFormattedTimeseries = (player: NBAPlayer) => {
     return player.stats_games_timeseries.map(({game, ...stats}) => {
         return {date: new Date(game.start_time_utc).toLocaleDateString(), ...stats}
@@ -161,11 +196,29 @@ const getExpandedContent = (show: boolean, player: NBAPlayer, nCols: number, cla
     )
 };
 
+const getOpposingTeam = (player: NBAPlayer) => {
+    return player.next_game.home_team.id === player.current_team.id ? player.next_game.home_team : player.next_game.visitor_team;
+};
+
+const getNextGameType = (player: NBAPlayer) => {
+    const opp = getOpposingTeam(player);
+    return opp.id === player.next_game.home_team.id ? "@" : "vs";
+}
+
+const getTeamLogo = (team: NBATeam) => {
+    return `https://www.nba.com/assets/logos/teams/primary/web/${team.abbr}.svg`
+};
+
 @observer
 class StatsTable extends React.Component<Props> {
     @observable order = 'asc';
     @observable orderBy = 'Name';
     @observable showGraph = -1;
+    @observable tabValue = 0;
+
+    private handleTabChange = (event: any, value: number) => {
+        this.tabValue = value;
+    };
 
     private handleRequestSort = (event: any, property: string) => {
         const orderBy = property;
@@ -190,7 +243,8 @@ class StatsTable extends React.Component<Props> {
 
         return (
             <Paper>
-                <div>
+                <StatsTableToolbar tabValue={this.tabValue} handleTabChange={this.handleTabChange}/>
+                { this.tabValue === 0 && <div className={classes.tableWrapper}>
                     <Table padding={"dense"}>
                         <StatsTableHead classes={classes} columns={statColumns} order={this.order} orderBy={this.orderBy} onRequestSort={this.handleRequestSort}/>
                         <TableBody>
@@ -213,7 +267,30 @@ class StatsTable extends React.Component<Props> {
                             ))}
                         </TableBody>
                     </Table>
-                </div>
+                </div>}
+                {this.tabValue === 1 && <div>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Next Game</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.props.team.players.map((player) => (
+                                <TableRow key={player.id}>
+                                    <TableCell>
+                                        <Chip avatar={<Avatar src={getImageUrl(player.nba_id)}/>} label={`${player.first_name} ${player.last_name}`}/>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Chip avatar={<Avatar src={getTeamLogo(getOpposingTeam(player))}/>} label={`${getNextGameType(player)} ${getOpposingTeam(player).abbr}`}/>
+                                    </TableCell>
+
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>}
             </Paper>
         )
     }
