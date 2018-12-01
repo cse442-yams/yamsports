@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '84ehh#+7k8_wq_t9ya5vf4x94e6#eq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['yamsports.surge.sh', 'yamsports.heroku.com', '127.0.0.1']
+ALLOWED_HOSTS = ['yamsports.surge.sh', 'yamsports.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -98,7 +98,7 @@ DATABASES = {
 }
 
 import dj_database_url
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
