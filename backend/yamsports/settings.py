@@ -154,3 +154,11 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True  # TODO: refine this
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://bfd7d0f673ae484384b83d5a1067a184@sentry.io/1334944",
+    integrations=[DjangoIntegration()]
+)
