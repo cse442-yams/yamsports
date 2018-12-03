@@ -42,7 +42,7 @@ class NBAPlayer(models.Model):
     def stats_prev_game(self):
         return self.playergamestats_set.filter(
             game__start_time_utc__lte=now(), game__gamemeta__status_num=3
-        ).order_by('-game__start_time_utc')[0]
+        ).order_by('-game__start_time_utc').first()
 
     def stats_games_timeseries(self):
         # TODO: obviously season shouldn't be hardcoded
