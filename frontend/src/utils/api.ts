@@ -1,8 +1,10 @@
 import axios from 'axios';
 import {authStore} from "../auth/AuthStore";
 
+const url = process.env.REACT_APP_APIURL || 'http://localhost:8000/api/v1';
+
 const authorized_api = axios.create({
-    baseURL: 'http://localhost:8000/api/v1',
+    baseURL: url,
     headers: {
         "Content-Type": "application/json"
     }

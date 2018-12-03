@@ -16,9 +16,9 @@ class NewsFeedURL(models.Model):
 
 
 class NewsItem(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.TextField()
     link = models.URLField(max_length=200, unique=True, db_index=True)
-    summary = models.CharField(max_length=255)
+    summary = models.TextField()
     pub_date = models.DateTimeField()
 
 
