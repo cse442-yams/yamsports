@@ -54,10 +54,7 @@ class TeamList extends React.Component<Props, any> {
         console.log(this.props.teamId);
         if (userTeamStore.inProgress) {
             return (
-                <main className={this.props.classes.content}>
-                    <div className={this.props.classes.spacer}/>
-                    <CircularProgress size={50}/>
-                </main>
+                <CircularProgress size={50}/>
             )
         }
 
@@ -67,8 +64,7 @@ class TeamList extends React.Component<Props, any> {
         }
 
         return (
-            <main className={this.props.classes.content}>
-                <div className={this.props.classes.spacer}/>
+            <>
                 <div className={this.props.classes.heading}>
                     <Typography className={this.props.classes.title} variant={"display3"} gutterBottom={true}>{team.name}</Typography>
                     <FormControlLabel control={<Switch checked={userTeamUIStore.editMode}/>} label={"Edit"} onChange={this.toggleEditMode}/>
@@ -86,7 +82,7 @@ class TeamList extends React.Component<Props, any> {
                         </Zoom>
                     </Grid>
                 </Grid>
-            </main>
+            </>
         )
     }
 }

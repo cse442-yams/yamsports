@@ -2,6 +2,41 @@ import {action, computed, observable, runInAction} from "mobx";
 import authorized_api from "../utils/api";
 import {userTeamService} from "./UserTeamService";
 
+export interface NBAGame {
+    readonly id: number;
+    readonly nba_id: string;
+    readonly season: number;
+    readonly start_time_utc: string;
+    readonly home_team: NBATeam;
+    readonly visitor_team: NBATeam;
+}
+
+export interface PlayerGameStats {
+    readonly game: NBAGame;
+    readonly id: number;
+    position: string;
+    time_played: string;
+    dnp: boolean;
+    dnp_text: string;
+
+    points: number;
+    fgm: number;
+    fga: number;
+    ftm: number;
+    fta: number;
+    tpm: number;
+    tpa: number;
+    offReb: number;
+    defReb: number;
+    totReb: number;
+    assists: number;
+    pFouls: number;
+    steals: number;
+    turnovers: number;
+    blocks: number;
+    plusMinus: number;
+}
+
 export interface NBAPlayer {
     readonly id: number;
     readonly nba_id: number;
@@ -10,6 +45,9 @@ export interface NBAPlayer {
     readonly jersey: number;
     readonly position: string;
     readonly current_team: NBATeam;
+    readonly next_game: NBAGame;
+    readonly stats_prev_game: PlayerGameStats;
+    readonly stats_games_timeseries: PlayerGameStats[];
 }
 
 export interface NBATeam {
@@ -27,7 +65,7 @@ export interface UserTeam {
 
 class UserTeamStore {
     @observable inProgress = false;
-    @observable userTeams: Map<number, UserTeam> = new Map<number, UserTeam>();
+    userTeams: Map<number, UserTeam> = observable.map(new Map<number, UserTeam>(), {deep: false});
     @observable.shallow allPlayers: NBAPlayer[] = [];
 
     @observable.shallow playersToAdd: NBAPlayer[] = [];
