@@ -1,26 +1,11 @@
 import axios from 'axios';
 import {authStore} from "./AuthStore";
+import authorized_api from "../utils/api";
 
 class UserService {
-    private readonly api = axios.create({
-        baseURL: 'http://localhost:8000/api/v1/',
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-
-    constructor() {
-        this.api.interceptors.request.use(config => {
-            const token = authStore.token;
-            if (token) {
-                config.headers["Authorization"] = `Token ${token}`
-            }
-            return config
-        })
-    }
 
     public getUserDetails() {
-        return this.api.get("/rest-auth/user/")
+        return authorized_api.get("/rest-auth/user/")
     }
 }
 

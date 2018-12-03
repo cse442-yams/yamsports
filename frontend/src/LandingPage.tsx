@@ -1,16 +1,25 @@
 import * as React from 'react';
 import green from "@material-ui/core/colors/green";
-import purple from "@material-ui/core/colors/purple";
-import { createStyles, WithStyles, withStyles, Typography, Theme, createMuiTheme, MuiThemeProvider, Button } from '@material-ui/core';
+import {
+    Button,
+    createMuiTheme,
+    createStyles,
+    MuiThemeProvider,
+    Theme,
+    Typography,
+    withStyles,
+    WithStyles
+} from '@material-ui/core';
 import jamesImage from "./james.jpg";
 import LoginDialog from './auth/LoginDialog';
 import {observer} from "mobx-react";
 import {userStore} from "./auth/UserStore";
 import {Redirect} from "react-router";
+import {deepPurple} from "@material-ui/core/colors";
 
 const landingTheme = createMuiTheme({
     palette: {
-        primary: purple,
+        primary: deepPurple,
         secondary: green,
         type: 'dark'
     }

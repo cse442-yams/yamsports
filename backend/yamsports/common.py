@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '84ehh#+7k8_wq_t9ya5vf4x94e6#eq-omh1yi$7jjfj$0wqfvx'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '84ehh#+7k8_wq_t9ya5vf4x94e6#eq-omh1yi$7jjfj$0wqfvx')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yamsports.surge.sh', 'yamsports.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
 
     'api',
     'users',
+    'nba_profile',
+    'newsfeed'
 ]
 
 MIDDLEWARE = [
@@ -94,7 +96,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -143,7 +144,10 @@ SITE_ID = 1
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    )
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
 CORS_ORIGIN_ALLOW_ALL = True  # TODO: refine this
+

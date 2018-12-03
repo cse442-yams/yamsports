@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class AuthService {
     private readonly api = axios.create({
-        baseURL: "http://localhost:8000/api/v1",
+        baseURL: process.env.REACT_APP_APIURL || "http://localhost:8000/api/v1",
         headers: {
             "Content-Type": "application/json"
         }
