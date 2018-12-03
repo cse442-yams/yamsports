@@ -73,6 +73,29 @@ const statFields = ['points', 'fgm', 'fga', 'ftm', 'fta', 'tpm', 'tpa', 'offReb'
 const statColumns = ['Name', 'Minutes', 'Points', 'FGM', 'FGA', 'FTM', 'FTA', '3PM', '3PA', 'OREB', 'DREB', 'REB', 'AST', 'PF', 'STL', 'TOV', 'BLK', 'PlusMinus'];
 
 const formatPlayerStats = (player: NBAPlayer) => {
+    if (player.stats_prev_game == null) {
+        return {
+            playerObj: player,
+            Name: `${player.first_name} ${player.last_name}`,
+            Minutes: '00:00',
+            Points: 0,
+            'FGM': 0,
+            'FGA': 0,
+            'FTM': 0,
+            'FTA': 0,
+            '3PM': 0,
+            '3PA': 0,
+            'OREB': 0,
+            'DREB': 0,
+            'REB': 0,
+            'AST': 0,
+            'PF': 0,
+            'STL': 0,
+            'TOV': 0,
+            'BLK': 0,
+            'PlusMinus': 0
+        }
+    }
     const s = player.stats_prev_game;
     return {
         playerObj: player,
@@ -209,6 +232,22 @@ const getTeamLogo = (team: NBATeam) => {
     return `https://www.nba.com/assets/logos/teams/primary/web/${team.abbr}.svg`
 };
 
+const getRowCells = (player: NBAPlayer, stats: any) => {
+    if (player.stats_prev_game == null) {
+        return (
+            <DenseCell colSpan={Object.keys(stats).length}>No game found</DenseCell>
+        )
+    }
+
+    if (player.stats_prev_game.dnp) {
+        return (
+            <DenseCell colSpan={Object.keys(stats).length}>{player.stats_prev_game.dnp_text || "Did not play"}</DenseCell>
+        )
+    }
+
+    return Object.keys(stats).map((k: any) => (<DenseCell numeric>{stats[k]}</DenseCell>))
+};
+
 @observer
 class StatsTable extends React.Component<Props> {
     @observable order = 'asc';
@@ -257,10 +296,7 @@ class StatsTable extends React.Component<Props> {
                                         <TableCell>
                                             <Chip avatar={<Avatar src={getImageUrl(playerObj.nba_id)}/>} label={Name}/>
                                         </TableCell>
-
-                                        {Object.keys(stats).map((k: any) => (
-                                            <DenseCell numeric>{stats[k]}</DenseCell>
-                                        ))}
+                                        {getRowCells(playerObj, stats)}
                                     </TableRow>
                                     {getExpandedContent(this.showGraph === playerObj.id, playerObj, statColumns.length, classes)}
                                 </>
