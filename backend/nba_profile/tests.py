@@ -85,3 +85,8 @@ class PlayerStatsTest(APITestCase):
     def test_next_game(self):
         next_game = self.player.next_game()
         self.assertGreater(next_game.start_time_utc, now())
+
+    def test_season_games(self):
+        season = self.player.stats_games_timeseries()
+        for stats in season:
+            self.assertGreater(now(), stats.game.start_time_utc)
