@@ -1,8 +1,9 @@
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
+from django.utils.timezone import now
 
-from nba_profile.models import UserTeam, NBAPlayer
+from nba_profile.models import *
 from users.models import CustomUser
 
 
@@ -73,4 +74,14 @@ class UserTeamsTest(APITestCase):
         self.assertEqual(team.players.count(), 5)
 
 
+class PlayerStatsTest(APITestCase):
+    client = APIClient()
 
+    fixtures = ['stats.json']
+
+    def setUp(self):
+        self.player = NBAPlayer.objects.first()
+
+    def test_next_game(self):
+        next_game = self.player.next_game()
+        self.assertGreater(next_game.start_time_utc, now())
